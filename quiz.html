@@ -55,7 +55,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0.5rem;
+            padding: 0.2rem;
         }
 
         .renderer-core-block-scroller {
@@ -90,33 +90,16 @@
             min-height: 0;
         }
 
-        /* Centered header */
+        /* Minimal header – only the intro paragraph */
         .dashboard-header {
             flex-shrink: 0;
-            margin-bottom: 0.3rem;
             text-align: center;
-        }
-        .dashboard-header .subheading {
-            font-family: 'Oswald', sans-serif;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-            display: block;
-        }
-        .dashboard-header h1 {
-            font-family: 'Oswald', sans-serif;
-            color: #fff;
-            font-size: 1.8rem;
-            line-height: 1.1;
-            margin: 0;
-        }
-        .dashboard-header h1 .highlight {
-            color: #F2D675;
+            margin-bottom: 0.3rem;
         }
         .dashboard-header p {
             font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.7);
-            margin: 0.2rem 0 0.5rem;
+            margin: 0;
         }
 
         /* Dashboard grid – vertically centered */
@@ -124,7 +107,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            align-content: center; /* changed from flex-start to center */
+            align-content: center;
             gap: 0.8rem;
             flex: 1;
             min-height: 0;
@@ -145,7 +128,7 @@
             max-width: calc(25% - 0.8rem);
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(2px);
-            padding: 1.2rem 0.6rem;
+            padding: 0.8rem 0.6rem;
             border-radius: 12px 0 12px 0;
             cursor: pointer;
             transition: 0.2s;
@@ -366,7 +349,7 @@
             color: white !important;
         }
 
-        /* Modal – Cancel button (now #0096d6) */
+        /* Modal – Cancel button (#0096d6) */
         #modal-cancel-btn {
             background: #0096d6 !important;
             color: #ffffff !important;
@@ -628,8 +611,6 @@
         <!-- ===== DASHBOARD VIEW ===== -->
         <div id="dashboard-view" class="renderer-components-field-content">
             <div class="dashboard-header">
-                <span class="subheading">Assessment Center</span>
-                <h1>Your <span class="highlight">Dashboard</span></h1>
                 <p>Select a category to evaluate your strengths.</p>
             </div>
             <div class="dashboard-grid" id="dashboardGrid"></div>
