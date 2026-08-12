@@ -55,7 +55,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0.2rem;
+            padding: 0.5rem;
         }
 
         .renderer-core-block-scroller {
@@ -449,7 +449,7 @@
             display: none !important;
         }
 
-        /* Responsive – adjust card columns */
+        /* Responsive – card columns adjust, but NO .section-card overrides at these breakpoints */
         @media (max-width: 700px) {
             .renderer-components-question-header .renderer-components-block-label .renderer-core-html-parser p {
                 font-size: 1.6rem !important;
@@ -463,10 +463,7 @@
                 padding: 0.4rem 0.6rem;
                 min-height: 40px;
             }
-            .section-card {
-                flex: 0 0 calc(50% - 0.8rem);
-                max-width: calc(50% - 0.8rem);
-            }
+            /* .section-card rules removed */
         }
 
         @media (max-width: 500px) {
@@ -542,13 +539,7 @@
                 font-size: 0.75rem;
                 min-height: 36px;
             }
-            .section-card {
-                min-height: 50px;
-                padding: 0.4rem;
-            }
-            .section-card h3 {
-                font-size: 0.8rem;
-            }
+            /* .section-card rules removed */
             .dashboard-grid {
                 gap: 0.4rem;
             }
@@ -580,13 +571,7 @@
                 padding: 0.3rem 0.6rem;
                 min-height: 32px;
             }
-            .section-card {
-                min-height: 40px;
-                padding: 0.3rem;
-            }
-            .section-card h3 {
-                font-size: 0.7rem;
-            }
+            /* .section-card rules removed */
             .dashboard-grid {
                 gap: 0.2rem;
             }
