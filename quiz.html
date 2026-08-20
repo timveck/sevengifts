@@ -848,13 +848,25 @@
         btn.disabled = true;
         btn.style.opacity = "0.6";
 
+        // Work out each category's score
+        var scores = {};
+        questionsData.forEach(function(item) {
+            scores[item.id] = allData[item.id].answers.reduce((a, b) => a + (b || 0), 0);
+        });
+
         // 1. Try GetPlayer (same‑domain)
         try {
             var player = window.parent.GetPlayer();
             if (player && typeof player.SetVar === 'function') {
                 player.SetVar("assessmentComplete", true);
-                player.SetVar("assessmentData", JSON.stringify(allData));
-                console.log("[Bridge] GetPlayer SUCCESS: assessmentComplete = true, assessmentData set.");
+                player.SetVar("mercyScore", scores.mercy);
+                player.SetVar("serviceScore", scores.service);
+                player.SetVar("teachingScore", scores.teaching);
+                player.SetVar("adminScore", scores.admin);
+                player.SetVar("givingScore", scores.giving);
+                player.SetVar("prophecyScore", scores.prophecy);
+                player.SetVar("exhortationScore", scores.exhortation);
+                console.log("[Bridge] GetPlayer SUCCESS: assessmentComplete = true, scores set.");
             } else {
                 console.warn("[Bridge] GetPlayer not available or invalid (player =", player, ")");
             }
