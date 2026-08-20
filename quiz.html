@@ -693,6 +693,7 @@
     let currentSection = null;
     let currentQIdx = 0;
     let allData = {};
+    let careerReportData = {};
 
     try {
         const stored = localStorage.getItem('talent_scores');
@@ -854,6 +855,22 @@
             scores[item.id] = allData[item.id].answers.reduce((a, b) => a + (b || 0), 0);
         });
 
+        // Rank gifts highest to lowest, then pull the report copy for the top 3
+        var ranked = Object.keys(scores)
+            .map(function(id) { return { id: id, score: scores[id] }; })
+            .sort(function(a, b) { return b.score - a.score; });
+
+        var top3 = ranked.slice(0, 3).map(function(entry) {
+            var report = careerReportData[entry.id] || {};
+            return {
+                id: entry.id,
+                profile: report.profile || "",
+                strength: report.strength || "",
+                careers: (report.careers || []).join(", "),
+                riskAndGrowth: report.riskAndGrowth || ""
+            };
+        });
+
         // 1. Try GetPlayer (same‑domain)
         try {
             var player = window.parent.GetPlayer();
@@ -866,7 +883,26 @@
                 player.SetVar("givingScore", scores.giving);
                 player.SetVar("prophecyScore", scores.prophecy);
                 player.SetVar("exhortationScore", scores.exhortation);
-                console.log("[Bridge] GetPlayer SUCCESS: assessmentComplete = true, scores set.");
+
+                player.SetVar("top1GiftId", top3[0].id);
+                player.SetVar("top1Profile", top3[0].profile);
+                player.SetVar("top1Strength", top3[0].strength);
+                player.SetVar("top1Careers", top3[0].careers);
+                player.SetVar("top1RiskAndGrowth", top3[0].riskAndGrowth);
+
+                player.SetVar("top2GiftId", top3[1].id);
+                player.SetVar("top2Profile", top3[1].profile);
+                player.SetVar("top2Strength", top3[1].strength);
+                player.SetVar("top2Careers", top3[1].careers);
+                player.SetVar("top2RiskAndGrowth", top3[1].riskAndGrowth);
+
+                player.SetVar("top3GiftId", top3[2].id);
+                player.SetVar("top3Profile", top3[2].profile);
+                player.SetVar("top3Strength", top3[2].strength);
+                player.SetVar("top3Careers", top3[2].careers);
+                player.SetVar("top3RiskAndGrowth", top3[2].riskAndGrowth);
+
+                console.log("[Bridge] GetPlayer SUCCESS: assessmentComplete = true, scores and top 3 report data set.");
             } else {
                 console.warn("[Bridge] GetPlayer not available or invalid (player =", player, ")");
             }
@@ -929,9 +965,22 @@
         }
     }
 
+    // ===== FETCH CAREER REPORT DATA =====
+    async function fetchCareerReport() {
+        try {
+            const response = await fetch('careerReport.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            careerReportData = data;
+        } catch (error) {
+            console.error("Failed to load careerReport.json:", error);
+        }
+    }
+
     // ===== INIT =====
     window.addEventListener('DOMContentLoaded', async () => {
         await fetchQuestions();
+        await fetchCareerReport();
         if (questionsData.length > 0) {
             loadDashboard();
         }
