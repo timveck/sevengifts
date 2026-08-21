@@ -864,6 +864,7 @@
             var report = careerReportData[entry.id] || {};
             return {
                 id: entry.id,
+                score: entry.score,
                 profile: report.profile || "",
                 strength: report.strength || "",
                 careers: (report.careers || []).join(", "),
@@ -876,27 +877,20 @@
             var player = window.parent.GetPlayer();
             if (player && typeof player.SetVar === 'function') {
                 player.SetVar("assessmentComplete", true);
-                player.SetVar("mercyScore", scores.mercy);
-                player.SetVar("serviceScore", scores.service);
-                player.SetVar("teachingScore", scores.teaching);
-                player.SetVar("adminScore", scores.admin);
-                player.SetVar("givingScore", scores.giving);
-                player.SetVar("prophecyScore", scores.prophecy);
-                player.SetVar("exhortationScore", scores.exhortation);
 
-                player.SetVar("top1GiftId", top3[0].id);
+                player.SetVar("top1Score", top3[0].score);
                 player.SetVar("top1Profile", top3[0].profile);
                 player.SetVar("top1Strength", top3[0].strength);
                 player.SetVar("top1Careers", top3[0].careers);
                 player.SetVar("top1RiskAndGrowth", top3[0].riskAndGrowth);
 
-                player.SetVar("top2GiftId", top3[1].id);
+                player.SetVar("top2Score", top3[1].score);
                 player.SetVar("top2Profile", top3[1].profile);
                 player.SetVar("top2Strength", top3[1].strength);
                 player.SetVar("top2Careers", top3[1].careers);
                 player.SetVar("top2RiskAndGrowth", top3[1].riskAndGrowth);
 
-                player.SetVar("top3GiftId", top3[2].id);
+                player.SetVar("top3Score", top3[2].score);
                 player.SetVar("top3Profile", top3[2].profile);
                 player.SetVar("top3Strength", top3[2].strength);
                 player.SetVar("top3Careers", top3[2].careers);
