@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talent Assessment Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald&family=Work+Sans:ital,wght@0,100..900;1,100..900&family=Allura&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+        /* ----- Provided Design System (adapted) ----- */
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald&family=Work+Sans:ital,wght@0,100..900;1,100..900&family=Allura&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            font-family: "Work Sans", Arial, Helvetica, sans-serif;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 1.6;
+            background: #00161f;
+        }
+
+        p,
+        li,
+        a,
+        b,
+        strong {
+            letter-spacing: -1px;
+        }
+        p {
+            margin-bottom: 30px;
+        }
+        p strong {
+            font-weight: 700;
+        }
+
+        .app-wrapper {
+            height: 100vh;
+            height: 100dvh;
+            width: 100vw;
+            width: 100dvw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+        }
+
+        .renderer-core-block-scroller {
+            width: 100%;
+            max-width: 900px;
+            height: 100%;
+            max-height: 700px;
+            background-color: #00161f;
+            background-image: linear-gradient(
+                to bottom right,
+                rgba(0, 150, 214, 0.6),
+                rgba(0, 150, 214, 0.5) 26.44%,
+                rgba(121, 113, 212, 0.6) 71.91%,
+                rgba(121, 113, 212, 0.6) 101.51%
+              ),
+              linear-gradient(0deg, #003152, #003152);
+            border-radius: 30px 0px 30px 0px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .renderer-components-field-content {
+            max-width: 90%;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* Minimal header – only the intro paragraph */
+        .dashboard-header {
+            flex-shrink: 0;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .dashboard-header p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+        }
+
+        /* Dashboard grid – vertically centered */
+        .dashboard-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            gap: 0.8rem;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 0.2rem 0.2rem 0.2rem 0;
+        }
+        .dashboard-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+        .dashboard-grid::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .section-card {
+            flex: 0 0 calc(25% - 0.8rem);
+            min-width: 120px;
+            max-width: calc(25% - 0.8rem);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(2px);
+            padding: 0.8rem 0.6rem;
+            border-radius: 12px 0 12px 0;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 80px;
+            position: relative;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+        .section-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Completed card – gold background, dark text, no tick */
+        .section-card.completed {
+            background: #F2D675 !important;
+            border-color: #D4AF37;
+        }
+        .section-card.completed h3 {
+            color: #000e14 !important;
+        }
+        .section-card.completed .score-label {
+            color: #000e14 !important;
+        }
+        .section-card.completed .status-badge {
+            color: #5a4a1a !important;
+        }
+        .section-card.completed:hover {
+            background: #ebdca5 !important;
+        }
+
+        .section-card h3 {
+            font-family: "Oswald", sans-serif;
+            font-weight: 400;
+            font-size: 1rem;
+            color: #fff;
+            margin: 0.2rem 0;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            text-align: center;
+        }
+        .section-card h3 .the-word {
+            display: block;
+            font-weight: 300;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+        .section-card.completed h3 .the-word {
+            opacity: 0.9;
+        }
+        .section-card .score-label {
+            font-size: 0.7rem;
+            color: #ebdca5;
+            font-weight: 600;
+            margin-top: 0.2rem;
+            text-align: center;
+        }
+        .section-card .status-badge {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #f2d675;
+            margin-bottom: 0.2rem;
+            text-align: center;
+        }
+        /* Remove checkmark entirely */
+        .section-card .checkmark {
+            display: none;
+        }
+
+        /* Quiz header */
+        .quiz-header {
+            flex-shrink: 0;
+        }
+        .renderer-components-question-header .renderer-components-block-label .renderer-core-html-parser p {
+            font-family: "Oswald", "Franklin Gothic Medium", "Arial Narrow", sans-serif !important;
+            font-size: 2.2rem !important;
+            line-height: 2.6rem !important;
+            color: #FFFFFF !important;
+            text-shadow: 0px -1px black !important;
+            margin-bottom: 0.3rem;
+        }
+
+        .renderer-core-progress-bar {
+            flex-shrink: 0;
+            margin: 0.5rem 0 0.8rem;
+        }
+        .renderer-core-progress-bar__label .renderer-core-html-parser p {
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
+        .renderer-core-progress-bar__track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .renderer-core-progress-bar__fill {
+            height: 100%;
+            background: linear-gradient(135deg, #D4AF37, #F2D675);
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        /* Multiple choice */
+        .multiplechoice__options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            flex: 1 1 auto;
+            min-height: 0;
+            align-content: center;
+        }
+
+        .multipleChoice__optionWrapper {
+            flex: 1 0 calc(50% - 0.4rem);
+            min-width: 120px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 0;
+            padding: 0.6rem 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .multipleChoice__optionWrapper:nth-child(1),
+        .multipleChoice__optionWrapper:nth-child(3) { background-color: rgba(255, 255, 255, 0.85); }
+        .multipleChoice__optionWrapper:nth-child(2),
+        .multipleChoice__optionWrapper:nth-child(4) { background-color: rgba(255, 255, 255, 0.65); }
+        .multipleChoice__optionWrapper:nth-child(5),
+        .multipleChoice__optionWrapper:nth-child(7) { background-color: rgba(255, 255, 255, 0.65); }
+        .multipleChoice__optionWrapper:nth-child(6),
+        .multipleChoice__optionWrapper:nth-child(8) { background-color: rgba(255, 255, 255, 0.85); }
+        .multipleChoice__optionWrapper:nth-child(9),
+        .multipleChoice__optionWrapper:nth-child(11) { background-color: rgba(255, 255, 255, 0.85); }
+        .multipleChoice__optionWrapper:nth-child(10),
+        .multipleChoice__optionWrapper:nth-child(12) { background-color: rgba(255, 255, 255, 0.65); }
+        .multipleChoice__optionWrapper:nth-child(13),
+        .multipleChoice__optionWrapper:nth-child(15) { background-color: rgba(255, 255, 255, 0.65); }
+        .multipleChoice__optionWrapper:nth-child(14) { background-color: rgba(255, 255, 255, 0.85); }
+
+        .multipleChoice__optionWrapper:hover {
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+            background-color: #ffffff !important;
+            opacity: 1;
+        }
+        .multipleChoice__optionWrapper.selected {
+            background-color: #ebdca5 !important;
+            border-color: #D4AF37;
+        }
+
+        .multipleChoice__optionLabel {
+            font-family: "Work Sans", Arial, Helvetica, sans-serif;
+            color: #000e14;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: center;
+            padding: 0.2rem 0;
+        }
+
+        /* Buttons & actions */
+        .renderer-core-field-action {
+            flex-shrink: 0;
+            margin-top: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+        .renderer-core-button {
+            background: linear-gradient(135deg, #D4AF37, #F2D675);
+            color: #000e14 !important;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-family: "Work Sans", sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+            min-height: 44px;
+        }
+        .renderer-core-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .renderer-core-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .renderer-core-button-outline {
+            background: transparent;
+            border: 2px solid #F2D675;
+            color: #F2D675 !important;
+        }
+        .renderer-core-button-outline:hover {
+            background: rgba(242, 214, 117, 0.15);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            color: white !important;
+        }
+
+        /* Modal – Cancel button (#0096d6) */
+        #modal-cancel-btn {
+            background: #0096d6 !important;
+            color: #ffffff !important;
+            border: none !important;
+        }
+        #modal-cancel-btn:hover {
+            background: #0077b3 !important;
+            transform: scale(1.02);
+        }
+
+        /* Results */
+        .results-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-align: center;
+        }
+        .results-content h1 {
+            font-family: "Oswald", sans-serif;
+            font-size: 2.5rem;
+        }
+        .results-content .highlight {
+            color: #F2D675;
+        }
+        .results-content .final-score {
+            font-size: 4rem;
+            color: #F2D675;
+            margin: 0.5rem 0;
+        }
+        .results-content .score-out-of {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Modal overlay */
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 10px;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            border-radius: 20px 0 20px 0;
+            max-height: 90vh;
+            overflow-y: auto;
+            text-align: center;
+        }
+        .modal-content h2 {
+            font-family: "Oswald", sans-serif;
+        }
+        .modal-btns {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .top-gift-item {
+            background: rgba(0,0,0,0.03);
+            margin: 1rem 0;
+            padding: 1rem;
+            text-align: left;
+            border-left: 6px solid #D4AF37;
+        }
+        .gift-name {
+            color: #4e44a4;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .gift-desc {
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .gift-score {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive – card columns adjust, but NO .section-card overrides at these breakpoints */
+        @media (max-width: 700px) {
+            .renderer-components-question-header .renderer-components-block-label .renderer-core-html-parser p {
+                font-size: 1.6rem !important;
+                line-height: 2rem !important;
+            }
+            .multipleChoice__optionLabel {
+                font-size: 0.95rem;
+            }
+            .multipleChoice__optionWrapper {
+                flex: 1 0 calc(50% - 0.4rem);
+                padding: 0.4rem 0.6rem;
+                min-height: 40px;
+            }
+            /* .section-card rules removed */
+        }
+
+        @media (max-width: 500px) {
+            .renderer-core-block-scroller {
+                padding: 0.8rem;
+                border-radius: 20px 0 20px 0;
+            }
+            .renderer-components-question-header .renderer-components-block-label .renderer-core-html-parser p {
+                font-size: 1.4rem !important;
+                line-height: 1.8rem !important;
+            }
+            .multiplechoice__options {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            .multipleChoice__optionWrapper {
+                flex: 1 0 auto;
+                width: 100%;
+                min-height: 44px;
+                padding: 0.5rem 0.8rem;
+            }
+            .multipleChoice__optionLabel {
+                font-size: 0.9rem;
+            }
+            .section-card h3 {
+                font-size: 0.9rem;
+            }
+            .renderer-core-button {
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+                min-height: 40px;
+            }
+            .renderer-core-field-action {
+                gap: 0.4rem;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .renderer-core-block-scroller {
+                padding: 0.5rem;
+                border-radius: 15px 0 15px 0;
+            }
+            .renderer-components-question-header .renderer-components-block-label .renderer-core-html-parser p {
+                font-size: 1.4rem !important;
+                line-height: 1.8rem !important;
+                margin-bottom: 0.1rem;
+            }
+            .renderer-core-progress-bar {
+                margin: 0.2rem 0 0.4rem;
+            }
+            .renderer-core-progress-bar__label .renderer-core-html-parser p {
+                font-size: 0.8rem;
+                margin-bottom: 0;
+            }
+            .multipleChoice__optionWrapper {
+                padding: 0.3rem 0.5rem;
+                min-height: 36px;
+            }
+            .multipleChoice__optionLabel {
+                font-size: 0.85rem;
+            }
+            .renderer-core-field-action {
+                margin-top: 0.4rem;
+            }
+            .renderer-core-button {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+                min-height: 36px;
+            }
+            /* .section-card rules removed */
+            .dashboard-grid {
+                gap: 0.4rem;
+            }
+            .results-content h1 {
+                font-size: 1.8rem;
+            }
+            .results-content .final-score {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-height: 450px) {
+            .renderer-core-block-scroller {
+                padding: 0.3rem;
+            }
+            .renderer-components-question-header .renderer-components-block-label .renderer-core-html-parser p {
+                font-size: 1.2rem !important;
+                line-height: 1.4rem !important;
+            }
+            .multipleChoice__optionWrapper {
+                padding: 0.2rem 0.4rem;
+                min-height: 32px;
+            }
+            .multipleChoice__optionLabel {
+                font-size: 0.75rem;
+            }
+            .renderer-core-button {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+                min-height: 32px;
+            }
+            /* .section-card rules removed */
+            .dashboard-grid {
+                gap: 0.2rem;
+            }
+        }
+
+        @media (max-width: 400px) and (max-height: 500px) {
+            .renderer-components-question-header .renderer-components-block-label .renderer-core-html-parser p {
+                font-size: 1rem !important;
+                line-height: 1.2rem !important;
+            }
+            .multipleChoice__optionLabel {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app" class="app-wrapper">
+    <div class="renderer-core-block-scroller" id="mainContainer">
+
+        <!-- ===== DASHBOARD VIEW ===== -->
+        <div id="dashboard-view" class="renderer-components-field-content">
+            <div class="dashboard-header">
+                <p>Select a category to evaluate your strengths.</p>
+            </div>
+            <div class="dashboard-grid" id="dashboardGrid"></div>
+            <div style="flex-shrink:0; margin-top:0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;">
+                <button id="continueToCourseBtn" class="renderer-core-button btn-success hidden" onclick="completeAssessmentAndContinue()">
+                    ✅ Continue to Course
+                </button>
+                <button class="renderer-core-button renderer-core-button-outline" onclick="confirmResetAll()">Reset All Progress</button>
+            </div>
+        </div>
+
+        <!-- ===== QUIZ VIEW ===== -->
+        <div id="quiz-view" class="renderer-components-field-content hidden">
+            <div class="quiz-header">
+                <div class="renderer-components-question-header">
+                    <div class="renderer-components-block-label">
+                        <div class="renderer-core-html-parser">
+                            <p id="questionText">Question text?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="renderer-core-progress-bar">
+                    <div class="renderer-core-progress-bar__label">
+                        <div class="renderer-core-html-parser"><p id="questionCounter">Question 1 of 20</p></div>
+                    </div>
+                    <div class="renderer-core-progress-bar__track">
+                        <div class="renderer-core-progress-bar__fill" id="progressBar" style="width:0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="multiplechoice__options" id="optionsGrid">
+                <div class="multipleChoice__optionWrapper" onclick="submitAns(1)">
+                    <div class="multipleChoice__optionLabel">01 – Never</div>
+                </div>
+                <div class="multipleChoice__optionWrapper" onclick="submitAns(2)">
+                    <div class="multipleChoice__optionLabel">02 – Seldom</div>
+                </div>
+                <div class="multipleChoice__optionWrapper" onclick="submitAns(3)">
+                    <div class="multipleChoice__optionLabel">03 – Sometimes</div>
+                </div>
+                <div class="multipleChoice__optionWrapper" onclick="submitAns(4)">
+                    <div class="multipleChoice__optionLabel">04 – Usually</div>
+                </div>
+                <div class="multipleChoice__optionWrapper" onclick="submitAns(5)">
+                    <div class="multipleChoice__optionLabel">05 – Mostly</div>
+                </div>
+                <div class="multipleChoice__optionWrapper" onclick="submitAns(6)">
+                    <div class="multipleChoice__optionLabel">06 – Always</div>
+                </div>
+            </div>
+
+            <div class="renderer-core-field-action">
+                <button class="renderer-core-button" onclick="prevQuestion()">⬅ Previous</button>
+                <button class="renderer-core-button renderer-core-button-outline" onclick="showHome()">Exit to Dashboard</button>
+            </div>
+        </div>
+
+        <!-- ===== RESULTS VIEW ===== -->
+        <div id="results-view" class="renderer-components-field-content hidden">
+            <div class="results-content">
+                <span style="font-family:'Oswald',sans-serif;font-size:0.9rem;color:rgba(255,255,255,0.6);letter-spacing:1px;">Completion</span>
+                <h1>Category <span class="highlight">Finished</span></h1>
+                <p style="font-size:0.9rem;color:rgba(255,255,255,0.7);">Your total score for this section is:</p>
+                <div class="final-score" id="finalScoreDisplay">0</div>
+                <p class="score-out-of">Score is out of 120</p>
+                <button class="renderer-core-button" onclick="showHome()" style="margin-top:0.5rem;">Back to Dashboard</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ===== MODAL OVERLAY ===== -->
+<div id="modal-overlay" class="hidden">
+    <div class="modal-content">
+        <h2 id="modal-title">Confirm</h2>
+        <p id="modal-body" style="margin:10px 0;color:#666;line-height:1.5;"></p>
+        <div id="modal-list"></div>
+        <div class="modal-btns">
+            <button id="modal-cancel-btn" class="renderer-core-button" onclick="closeModal()">Cancel</button>
+            <button id="modal-confirm-btn" class="renderer-core-button">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== GIFTS METADATA =====
+    const giftInfo = {
+        mercy: { name: "Gift of Compassion / Mercy", info: "Understanding the Heart: Your Natural Empathy and Care for Others" },
+        service: { name: "Gift of Service", info: "Practical Action: Your Drive to Help Others and Get Things Done" },
+        teaching: { name: "Gift of Teaching", info: "Logic and Truth: Your Passion for Research and Accurate Information" },
+        admin: { name: "Gift of Administration / Leadership", info: "Strategic Vision: Your Ability to Organize People and Lead Projects to Success" },
+        giving: { name: "Gift of Giving", info: "Strategic Generosity: Your Natural Ability to Manage Resources and Support Others" },
+        prophecy: { name: "Gift of Prophecy / Perceiver", info: "Values and Integrity: Your Ability to Identify Right and Wrong and Speak the Truth" },
+        exhortation: { name: "Gift of Exhortation / Encourager", info: "Practical Growth: Your Desire to Motivate Others and See Real Results" }
+    };
+
+    // ===== GLOBAL STATE =====
+    let questionsData = [];
+    let currentSection = null;
+    let currentQIdx = 0;
+    let allData = {};
+    let careerReportData = {};
+
+    try {
+        const stored = localStorage.getItem('talent_scores');
+        if (stored) allData = JSON.parse(stored);
+    } catch (e) { console.error("Local storage error:", e); }
+
+    function saveToLocal() {
+        try {
+            localStorage.setItem('talent_scores', JSON.stringify(allData));
+        } catch (e) { console.warn("Could not save to local storage."); }
+    }
+
+    // ===== MODAL =====
+    function openModal(title, body, confirmLabel, onConfirm, showList = false, hideCancel = false) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-body').innerText = body;
+        const listDiv = document.getElementById('modal-list');
+        listDiv.className = showList ? '' : 'hidden';
+        const cancelBtn = document.getElementById('modal-cancel-btn');
+        cancelBtn.className = hideCancel ? 'hidden' : 'renderer-core-button';
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        confirmBtn.innerText = confirmLabel;
+        confirmBtn.onclick = onConfirm;
+        document.getElementById('modal-overlay').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').classList.add('hidden');
+    }
+
+    // ===== DASHBOARD =====
+    function loadDashboard() {
+        const grid = document.getElementById('dashboardGrid');
+        grid.innerHTML = '';
+        const finishedCount = questionsData.filter(item => allData[item.id] && allData[item.id].done).length;
+        const allFinished = (finishedCount === questionsData.length && questionsData.length > 0);
+
+        // Show/hide the "Continue" button and reset its state
+        const contBtn = document.getElementById('continueToCourseBtn');
+        if (allFinished) {
+            contBtn.classList.remove('hidden');
+            contBtn.innerText = '✅ Continue to Course';
+            contBtn.disabled = false;
+            contBtn.style.opacity = '1';
+        } else {
+            contBtn.classList.add('hidden');
+            contBtn.innerText = '✅ Continue to Course';
+            contBtn.disabled = false;
+            contBtn.style.opacity = '1';
+        }
+
+        questionsData.forEach(item => {
+            const saved = allData[item.id] || { answers: [], done: false, date: "" };
+            const isDone = saved.done;
+            const answeredCount = (saved.answers || []).filter(a => a !== undefined).length;
+            const inProgress = !isDone && answeredCount > 0;
+            const scoreVal = (saved.answers || []).reduce((a, b) => a + (b || 0), 0);
+
+            const card = document.createElement('div');
+            card.className = 'section-card';
+            if (isDone) card.classList.add('completed');
+
+            // Split the title: "The" on first line, rest on second
+            const titleParts = item.title.split(' ');
+            const theWord = titleParts[0]; // "The"
+            const restTitle = titleParts.slice(1).join(' '); // "Kind Friend", etc.
+
+            card.onclick = () => handleCardClick(item.id, isDone);
+            card.innerHTML = `
+                ${inProgress ? `<span class="status-badge">In Progress (${answeredCount}/20)</span>` : ''}
+                <h3><span class="the-word">${theWord}</span>${restTitle}</h3>
+                <div class="score-label">${isDone ? 'Score: ' + scoreVal + '/120' : (inProgress ? 'Continue' : 'Not Started')}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function handleCardClick(id, isDone) {
+        if (isDone) {
+            openModal("Retake Assessment?", "Wipe score and try again?", "Yes, Restart", () => { closeModal(); startTest(id, true); });
+        } else {
+            startTest(id, false);
+        }
+    }
+
+    // ===== QUIZ =====
+    function startTest(id, restart) {
+        currentSection = questionsData.find(x => x.id === id);
+        if (!currentSection) return;
+        if (!allData[currentSection.id]) allData[currentSection.id] = { answers: [], done: false, date: "" };
+        if (restart) {
+            allData[currentSection.id].answers = [];
+            allData[currentSection.id].done = false;
+            currentQIdx = 0;
+        } else {
+            currentQIdx = (allData[currentSection.id].answers || []).length;
+        }
+        document.getElementById('dashboard-view').classList.add('hidden');
+        document.getElementById('quiz-view').classList.remove('hidden');
+        document.getElementById('results-view').classList.add('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const activeAnswers = allData[currentSection.id].answers;
+        document.getElementById('questionText').innerText = currentSection.questions[currentQIdx];
+        document.getElementById('questionCounter').innerText = `Question ${currentQIdx + 1} of 20`;
+        const percent = ((currentQIdx + 1) / 20) * 100;
+        document.getElementById('progressBar').style.width = percent + "%";
+        document.querySelectorAll('.multipleChoice__optionWrapper').forEach((opt, i) => {
+            opt.classList.toggle('selected', (i + 1) === activeAnswers[currentQIdx]);
+        });
+    }
+
+    function submitAns(val) {
+        allData[currentSection.id].answers[currentQIdx] = val;
+        saveToLocal();
+        if (currentQIdx < 19) {
+            currentQIdx++;
+            showQuestion();
+        } else {
+            completeCategory();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQIdx > 0) { currentQIdx--; showQuestion(); }
+    }
+
+    function completeCategory() {
+        const score = allData[currentSection.id].answers.reduce((a, b) => a + (b || 0), 0);
+        allData[currentSection.id].done = true;
+        allData[currentSection.id].date = new Date().toLocaleDateString();
+        saveToLocal();
+        document.getElementById('quiz-view').classList.add('hidden');
+        document.getElementById('results-view').classList.remove('hidden');
+        document.getElementById('finalScoreDisplay').innerText = score;
+    }
+
+    // ===== STORYLINE BRIDGE =====
+    function completeAssessmentAndContinue() {
+        const finishedCount = questionsData.filter(item => allData[item.id] && allData[item.id].done).length;
+        if (finishedCount !== questionsData.length) {
+            alert("Please complete all 7 assessment categories before continuing.");
+            return;
+        }
+
+        console.log("[Bridge] Assessment fully completed. Sending data to Storyline...");
+        console.log("[Bridge] Data payload:", JSON.stringify(allData));
+
+        const btn = document.getElementById('continueToCourseBtn');
+        btn.innerText = "⏳ Sending data...";
+        btn.disabled = true;
+        btn.style.opacity = "0.6";
+
+        // Work out each category's score
+        var scores = {};
+        questionsData.forEach(function(item) {
+            scores[item.id] = allData[item.id].answers.reduce((a, b) => a + (b || 0), 0);
+        });
+
+        // Rank gifts highest to lowest, then pull the report copy for the top 3
+        var ranked = Object.keys(scores)
+            .map(function(id) { return { id: id, score: scores[id] }; })
+            .sort(function(a, b) { return b.score - a.score; });
+
+        var top3 = ranked.slice(0, 3).map(function(entry) {
+            var report = careerReportData[entry.id] || {};
+            return {
+                id: entry.id,
+                score: entry.score,
+                profile: report.profile || "",
+                strength: report.strength || "",
+                careers: (report.careers || []).join(", "),
+                riskAndGrowth: report.riskAndGrowth || ""
+            };
+        });
+
+        // 1. Try GetPlayer (same‑domain)
+        try {
+            var player = window.parent.GetPlayer();
+            if (player && typeof player.SetVar === 'function') {
+                player.SetVar("assessmentComplete", true);
+
+                player.SetVar("top1Score", top3[0].score);
+                player.SetVar("top1Profile", top3[0].profile);
+                player.SetVar("top1Strength", top3[0].strength);
+                player.SetVar("top1Careers", top3[0].careers);
+                player.SetVar("top1RiskAndGrowth", top3[0].riskAndGrowth);
+
+                player.SetVar("top2Score", top3[1].score);
+                player.SetVar("top2Profile", top3[1].profile);
+                player.SetVar("top2Strength", top3[1].strength);
+                player.SetVar("top2Careers", top3[1].careers);
+                player.SetVar("top2RiskAndGrowth", top3[1].riskAndGrowth);
+
+                player.SetVar("top3Score", top3[2].score);
+                player.SetVar("top3Profile", top3[2].profile);
+                player.SetVar("top3Strength", top3[2].strength);
+                player.SetVar("top3Careers", top3[2].careers);
+                player.SetVar("top3RiskAndGrowth", top3[2].riskAndGrowth);
+
+                console.log("[Bridge] GetPlayer SUCCESS: assessmentComplete = true, scores and top 3 report data set.");
+            } else {
+                console.warn("[Bridge] GetPlayer not available or invalid (player =", player, ")");
+            }
+        } catch (e) {
+            console.warn("[Bridge] GetPlayer threw an error (likely cross-origin):", e);
+        }
+
+        // 2. Also send via postMessage (cross‑domain fallback)
+        try {
+            window.parent.postMessage({
+                type: "assessmentComplete",
+                data: allData,
+                timestamp: Date.now()
+            }, "*");
+            console.log("[Bridge] postMessage SENT to parent window.");
+        } catch (e) {
+            console.error("[Bridge] postMessage failed:", e);
+        }
+
+        btn.innerText = "✅ Waiting for course...";
+        console.log("[Bridge] Bridge sequence complete. Storyline should now advance.");
+    }
+
+    // ===== RESET =====
+    function confirmResetAll() {
+        openModal("Clear Everything?", "Are you sure?", "Reset All", () => {
+            try { localStorage.removeItem('talent_scores'); } catch(e) {}
+            allData = {};
+            const contBtn = document.getElementById('continueToCourseBtn');
+            contBtn.classList.add('hidden');
+            contBtn.innerText = '✅ Continue to Course';
+            contBtn.disabled = false;
+            contBtn.style.opacity = '1';
+            closeModal();
+            loadDashboard();
+        });
+    }
+
+    // ===== SHOW HOME =====
+    function showHome() {
+        document.getElementById('quiz-view').classList.add('hidden');
+        document.getElementById('results-view').classList.add('hidden');
+        document.getElementById('dashboard-view').classList.remove('hidden');
+        loadDashboard();
+    }
+
+    // ===== FETCH QUESTIONS =====
+    async function fetchQuestions() {
+        try {
+            const response = await fetch('questions.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            questionsData = data;
+        } catch (error) {
+            console.error("Failed to load questions.json:", error);
+            const grid = document.getElementById('dashboardGrid');
+            grid.innerHTML = `<p style="width:100%;color:#f2d675;text-align:center;padding:1rem;">
+                ⚠️ Could not load questions.json. Please ensure the file exists.
+            </p>`;
+        }
+    }
+
+    // ===== FETCH CAREER REPORT DATA =====
+    async function fetchCareerReport() {
+        try {
+            const response = await fetch('careerReport.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            careerReportData = data;
+        } catch (error) {
+            console.error("Failed to load careerReport.json:", error);
+        }
+    }
+
+    // ===== INIT =====
+    window.addEventListener('DOMContentLoaded', async () => {
+        await fetchQuestions();
+        await fetchCareerReport();
+        if (questionsData.length > 0) {
+            loadDashboard();
+        }
+    });
+</script>
+</body>
+</html>

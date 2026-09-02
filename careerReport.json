@@ -1,0 +1,44 @@
+{
+    "prophecy": {
+        "profile": "Honest Speaker",
+        "strength": "Direct, principled, willing to speak up",
+        "careers": ["Judge", "Lawyer", "Politician", "Social Activist", "Counselor"],
+        "riskAndGrowth": "Risk: Can seem harsh. Growth: Speak truth with patience and tact."
+    },
+    "service": {
+        "profile": "Reliable Helper",
+        "strength": "Dependable, practical, service-focused",
+        "careers": ["Nurse", "Social Worker", "Teacher", "Chef", "Event Planner"],
+        "riskAndGrowth": "Risk: Being taken for granted. Growth: Set boundaries and learn to say no."
+    },
+    "teaching": {
+        "profile": "Clear Thinker",
+        "strength": "Analytical, curious, detail-focused",
+        "careers": ["Researcher", "Technical Writer", "Data Analyst", "Educator"],
+        "riskAndGrowth": "Risk: Frustration with slower learners. Growth: Practice patience."
+    },
+    "exhortation": {
+        "profile": "Positive Supporter",
+        "strength": "Encouraging, empathetic, persuasive",
+        "careers": ["Counselor", "Motivational Speaker", "Pastor", "Coach"],
+        "riskAndGrowth": "Risk: Discouragement when others don't respond. Growth: Know when to support and when to step back."
+    },
+    "giving": {
+        "profile": "Generous Planner",
+        "strength": "Generous, responsible, financially aware",
+        "careers": ["Philanthropist", "Financial Advisor", "Non-profit Manager"],
+        "riskAndGrowth": "Risk: Being manipulated. Growth: Give with discernment."
+    },
+    "admin": {
+        "profile": "Organized Boss",
+        "strength": "Decisive, organized, visionary",
+        "careers": ["Manager", "CEO", "Project Leader", "Military Officer"],
+        "riskAndGrowth": "Risk: Becoming controlling. Growth: Listen, delegate, and invite input."
+    },
+    "mercy": {
+        "profile": "Kind Friend",
+        "strength": "Compassionate, patient, people-focused",
+        "careers": ["Counselor", "Nurse", "Social Worker", "Therapist"],
+        "riskAndGrowth": "Risk: Compassion fatigue. Growth: Set emotional boundaries."
+    }
+}
